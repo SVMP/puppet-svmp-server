@@ -3,6 +3,14 @@ Puppet-svmp-server
 
 A puppet module for installing and configuring the [SVMP Gateway Server](https://github.com/SVMP/svmp-server).
 
+To Do
+---
+
+* templatize the config file (class parameters should all be good to go)
+* configure init to launch the svmp server at boot
+* test on Ubuntu
+* class documentation
+
 License
 ---
 
