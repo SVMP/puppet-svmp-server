@@ -51,7 +51,8 @@ class svmp-server(
   $cloud_auth_url,
   $cloud_username,
   $cloud_password,
-  $cloud_tenant,
+  $cloud_tenant_id,
+  $cloud_tenant_name,
 
   $manage_repos  = false,
 
@@ -93,20 +94,22 @@ class svmp-server(
   group { $svmp_group:
     ensure => present,
     system => true,
-  } ->
+  }
 
   user { $svmp_user:
     ensure => present,
     system => true,
     gid    => $svmp_group,
-  } ->
+    require => Group[$svmp_group],
+  }
 
-  file { "${install_dir}":
+  file { $install_dir:
     ensure => directory,
     owner  => 'svmp',
     group  => 'svmp',
     mode   => '770',
-  } ->
+    require => [ User[$svmp_user], Group[$svmp_group], ],
+  } 
 
   vcsrepo { $install_dir:
     ensure   => latest,
@@ -114,8 +117,8 @@ class svmp-server(
     provider => git,
     source   => 'https://github.com/SVMP/svmp-server.git',
     revision => $version,
-    require  => [ Package['git'], ],
-  } ->
+    require  => [ Package['git'], File[$install_dir] ],
+  }
 
   file { 'config-local.js':
     name    => "${install_dir}/config/config-local.js",
@@ -123,8 +126,8 @@ class svmp-server(
     owner   => $svmp_user,
     group   => $svmp_group,
     mode    => '660',
-    require => [ File[$install_dir], Vcsrepo[$install_dir], ],
-    source  => 'puppet:///modules/svmp-server/config-local.js',
+    content => template('svmp-server/config-local.js.erb'),
+    require => Vcsrepo[$install_dir],
   }
 
   class { 'nodejs':

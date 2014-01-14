@@ -1,0 +1,25 @@
+module.exports = {
+        settings: {
+                    db: 'mongodb://<%= @db_host %>/<%= db_name %>',
+                    port: <%= @server_port %>,
+                    tls_proxy: <%= @use_ssl %>,
+                    vm_port: <%= @vm_port %>,
+                    test_db: 'mongodb://localhost/proxy_testing_db',
+                    openstack: {"authUrl": "<%= @cloud_auth_url %>",
+                                "username": "<%= @cloud_username %>",
+                                "password": "<%= @cloud_password %>",
+                                "tenantId": "<%= @cloud_tenant_id %>",
+                                "tenantName": "<%= @cloud_tenant_name %>" },
+                    pam: {service: '<%= @pam_service %>', remotehost: ''}
+                  },
+
+        // Video Information sent from Proxy to Client
+        webrtc: {
+                  ice: { iceServer: [ <% @ice_servers.each do |val| %>
+                                      {url: '<%= val %>'},
+                                      <% end %>
+                                    ]},
+                  video: { audio: true, video: { mandatory: {}, optional: []}},
+                  pc: {optional: [{DtlsSrtpKeyAgreement: true}]}
+                }
+};
