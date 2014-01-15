@@ -37,15 +37,32 @@
 #
 
 class svmp-server(
+  # Mongodb options
+  $install_db    = true,
+  $db_host       = 'localhost',
+  $db_name       = 'svmp_server_db',
+
   $server_port   = 8002,
-  $use_ssl       = false,
   $vm_port       = 8001,
 
-  $ice_servers,
+  $use_ssl       = false,
+  $ssl_cert_path = '',
+  $ssl_key_path  = '',
 
   # User authentication options
-  $use_pam_auth  = false,
+  $session_max_length = 21600,
+  $session_token_ttl  = 300,
+  $use_pam       = false,
   $pam_service   = 'svmp',
+
+  # Web console options
+  $enable_web_console = false,
+  $enable_email  = false,
+  $smtp_server   = '',
+  $admin_contact_address = '',
+
+  # array of TURN servers to use
+  $ice_servers,
 
   # Openstack options
   $cloud_auth_url,
@@ -58,11 +75,6 @@ class svmp-server(
 
   # Node.js / NPM options
   $npm_proxy     = '',
-
-  # Mongodb options
-  $install_db    = true,
-  $db_host       = 'localhost',
-  $db_name       = 'svmp_server_db',
 
   $svmp_user     = 'svmp',
   $svmp_group    = 'svmp',
@@ -100,6 +112,7 @@ class svmp-server(
     ensure => present,
     system => true,
     gid    => $svmp_group,
+    home   => $install_dir,
     require => Group[$svmp_group],
   }
 
@@ -134,18 +147,14 @@ class svmp-server(
     proxy => $npm_proxy,
   } ->
 
-  package { 
-    'protobuf':         provider => 'npm';
-    'q':                provider => 'npm';
-    'uid2':             provider => 'npm';
-    'mongoose':         provider => 'npm';
-    'commander':        provider => 'npm';
-    'colors':           provider => 'npm';
-    'pkgcloud':         provider => 'npm';
-    'authenticate-pam': provider => 'npm';
-    'winston':          provider => 'npm';
-  } <- Package['libpamdev']
-
+  exec { "npm_install_svmp_server":
+      command => "npm install",
+      user => $svmp_user,
+      cwd => $install_dir,
+      environment => "HOME=/opt/svmp-server",
+      path => $::path,
+      require => [ Vcsrepo[$install_dir], User[$svmp_user], Package['libpamdev'] ],
+  }
 
   if $install_db {
     class { 'mongodb':

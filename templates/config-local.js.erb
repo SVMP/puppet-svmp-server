@@ -1,25 +1,75 @@
+// FILE MANAGED BY PUPPET, CHANGES WILL BE OVERWRITTEN
 module.exports = {
-        settings: {
-                    db: 'mongodb://<%= @db_host %>/<%= db_name %>',
-                    port: <%= @server_port %>,
-                    tls_proxy: <%= @use_ssl %>,
-                    vm_port: <%= @vm_port %>,
-                    test_db: 'mongodb://localhost/proxy_testing_db',
-                    openstack: {"authUrl": "<%= @cloud_auth_url %>",
-                                "username": "<%= @cloud_username %>",
-                                "password": "<%= @cloud_password %>",
-                                "tenantId": "<%= @cloud_tenant_id %>",
-                                "tenantName": "<%= @cloud_tenant_name %>" },
-                    pam: {service: '<%= @pam_service %>', remotehost: ''}
-                  },
+    settings: {
+        // MongoDB database url
+        // default = 'mongodb://localhost/svmp_proxy_db'
+        db: 'mongodb://<%= @db_host %>/<%= db_name %>',
 
-        // Video Information sent from Proxy to Client
-        webrtc: {
-                  ice: { iceServer: [ <% @ice_servers.each do |val| %>
-                                      {url: '<%= val %>'},
-                                      <% end %>
-                                    ]},
-                  video: { audio: true, video: { mandatory: {}, optional: []}},
-                  pc: {optional: [{DtlsSrtpKeyAgreement: true}]}
-                }
+        // External TCP port to listen on for client connections.
+        // default = 8002
+        port: <%= @server_port %>,
+
+        // Port to connect to on Android VMs
+        // default = 8001
+        vm_port: <%= @vm_port %>,
+
+        // Enable SSL
+        // default = false
+        tls_proxy: <%= @use_ssl %>,
+
+        // SSL certificate and private key paths
+        // (required if tls_proxy == true)
+        tls_certificate: '<%= @ssl_cert_path %>',
+        tls_private_key: '<%= @ssl_key_path %>',
+
+        // Maximum length of a client session (in seconds) before it is
+        // forcibly disconnected.
+        // default = 21600 [6 hours]
+        max_session_length: <%= @session_max_length %>,
+
+        // Validity time of session tokens in seconds.
+        // Allows client to reconnect a disconnected session by providing
+        // the token instead of doing a full re-authentication.
+        // default = 300
+        session_token_ttl: <%= @session_token_ttl %>,
+
+        // Use PAM authentication
+        // default = false
+        use_pam: <%= @use_pam %>,
+
+        // PAM 'service' name to use. I.e., which file under /etc/pam.d/
+        // default = 'svmp'
+        pam_service: '<%= @pam_service %>',
+
+        // Web Console
+        // Enable email functionality for the web console
+        // default = false
+        sendmail: '<%= @enable_email %>',
+        // SMTP server, username, and password
+        // TODO: what format?
+        smtp: '<%= %>',
+        // Admin email address
+        admincontact: '<%= @admin_contact_address %>',
+
+        // Openstack cloud connection details
+        openstack: {"authUrl": "<%= @cloud_auth_url %>",
+                    "username": "<%= @cloud_username %>",
+                    "password": "<%= @cloud_password %>",
+                    "tenantId": "<%= @cloud_tenant_id %>",
+                    "tenantName": "<%= @cloud_tenant_name %>" 
+                   },
+    },
+
+    // WebRTC Video Information sent from Proxy to Client
+    webrtc: {
+        ice: { 
+            iceServers: [ <% @ice_servers.each do |val| %>
+                          {url: '<%= val %>'},
+                          <% end %>
+                        ]},
+        video: { audio: true, 
+                 video: { mandatory: {}, optional: [] } 
+               },
+        pc: { optional: [ { DtlsSrtpKeyAgreement: true } ] }
+    }
 };
