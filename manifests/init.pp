@@ -80,6 +80,8 @@ class svmp-server(
   $svmp_group    = 'svmp',
   $version       = 'svmp-1.1',
   $install_dir   = '/opt/svmp-server',
+
+  $source_repository = 'https://github.com/SVMP/svmp-server.git',
 ) {
 
   # Package prereqs
@@ -128,7 +130,7 @@ class svmp-server(
     ensure   => latest,
     user     => $svmp_user,
     provider => git,
-    source   => 'https://github.com/SVMP/svmp-server.git',
+    source   => $source_repository,
     revision => $version,
     require  => [ Package['git'], File[$install_dir] ],
   }
