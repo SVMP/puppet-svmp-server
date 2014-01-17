@@ -143,6 +143,7 @@ class svmp-server(
     mode    => '660',
     content => template('svmp-server/config-local.js.erb'),
     require => Vcsrepo[$install_dir],
+    notify  => Service['svmp-server'],
   }
 
   class { 'nodejs':
@@ -156,6 +157,24 @@ class svmp-server(
       environment => "HOME=/opt/svmp-server",
       path => $::path,
       require => [ Vcsrepo[$install_dir], User[$svmp_user], Package['libpamdev'] ],
+  }
+
+  package { 'forever':
+    provider => 'npm',
+  }
+
+  file { '/etc/init.d/svmp-server':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '755',
+    source => 'puppet:///modules/svmp-server/svmp-server-init-script',
+  }
+
+  service { 'svmp-server':
+    enable   => true,
+    ensure   => running,
+    require  => [ File['/etc/init.d/svmp-server'], Package['forever'], ],
   }
 
   if $install_db {
