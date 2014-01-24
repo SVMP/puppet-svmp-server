@@ -42,6 +42,8 @@ class svmp-server(
   $db_host       = 'localhost',
   $db_name       = 'svmp_server_db',
 
+  $log_file      = '/var/log/svmp-server.log',
+
   $server_port   = 8002,
   $vm_port       = 8001,
 
@@ -168,7 +170,7 @@ class svmp-server(
     owner  => 'root',
     group  => 'root',
     mode   => '755',
-    source => 'puppet:///modules/svmp-server/svmp-server-init-script',
+    content => template('svmp-server/svmp-init.erb'),
   }
 
   service { 'svmp-server':

@@ -5,6 +5,9 @@ module.exports = {
         // default = 'mongodb://localhost/svmp_proxy_db'
         db: 'mongodb://<%= @db_host %>/<%= db_name %>',
 
+        // Log file path
+        log_file: '<%= @log_file %>',
+
         // External TCP port to listen on for client connections.
         // default = 8002
         port: <%= @server_port %>,
