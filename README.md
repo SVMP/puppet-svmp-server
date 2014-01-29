@@ -6,10 +6,8 @@ A puppet module for installing and configuring the [SVMP Gateway Server](https:/
 To Do
 ---
 
-* templatize the config file (class parameters should all be good to go)
-* configure init to launch the svmp server at boot
-* test on Ubuntu
 * class documentation
+* fix installing on Ubuntu (works unless you have to use an HTTP proxy, see puppetlabs-nodejs Bug #51)
 
 License
 ---
