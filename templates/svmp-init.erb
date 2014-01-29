@@ -79,10 +79,10 @@
 NAME="SVMP Server"
 NODE_BIN_DIR=/usr/bin/node
 NODE_PATH=/usr/lib/node_modules
-APPLICATION_DIRECTORY=/opt/svmp-server
+APPLICATION_DIRECTORY=<% @install_dir %>
 APPLICATION_START=proxy.js
 PIDFILE=/var/run/svmp-server.pid
-LOGFILE=/var/log/svmp-server.log
+LOGFILE=<%= @log_file %>
 
 # Add node to the path for situations in which the environment is passed.
 PATH=$NODE_BIN_DIR:$PATH
