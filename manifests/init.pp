@@ -54,6 +54,7 @@ class svmp-server(
   # User authentication options
   $session_max_length = 21600,
   $session_token_ttl  = 300,
+  $session_check_interval = 60,
   $use_pam       = false,
   $pam_service   = 'svmp',
 
