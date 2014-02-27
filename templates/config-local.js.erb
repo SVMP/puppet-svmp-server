@@ -19,8 +19,20 @@ module.exports = {
 
         // SSL certificate and private key paths
         // (required if tls_proxy == true)
-        tls_certificate: '<%= @ssl_cert_path %>',
-        tls_private_key: '<%= @ssl_key_path %>',
+        tls_certificate: '<%= @tls_cert %>',
+        tls_private_key: '<%= @tls_private_key %>',
+
+        // SSL private key password
+        // (if the server private key file is password protected)
+        tls_private_key_pass: '<%= @tls_key_pass %>',
+
+        // Use TLS client authentication
+        // default = false
+        use_tls_user_auth: <%= @tls_user_auth %>,
+
+        // TLS CA Cert to validate user certs against
+        // only used if use_tls_user_auth == true
+        tls_ca_cert: '<%= @tls_ca_cert %>',
 
         // Maximum length of a client session (in seconds) before it is
         // forcibly disconnected.
@@ -30,13 +42,23 @@ module.exports = {
         // Validity time of session tokens in seconds.
         // Allows client to reconnect a disconnected session by providing
         // the token instead of doing a full re-authentication.
-        // default = 300 [5 minutes]
+        // default = 120 [2 minutes]
         session_token_ttl: <%= @session_token_ttl %>,
 
         // Interval (in seconds) of time to check for expired sessions.
         // This is used while a connection is active.
         // default = 60 [1 minute]
         session_check_interval: <%= @session_check_interval %>,
+
+        // Maximum life span of an idle VM (in seconds) before it is expired and gets destroyed.
+        // This is used after a session is disconnected.
+        // default = 3600 [1 hour]
+        vm_idle_ttl: <%= @vm_idle_ttl %>,
+
+        // Interval (in seconds) of time to check for expired VMs.
+        // This is used after a session is disconnected.
+        // default = 300 [5 minutes]
+        vm_check_interval: <%= @vm_idle_check_interval %>,
 
         // Use PAM authentication
         // default = false
@@ -50,23 +72,47 @@ module.exports = {
         // default = 'proxy_log.txt'
         log_file: '<%= @log_file %>',
 
-        // Web Console
-        // Enable email functionality for the web console
-        // default = false
-        sendmail: <%= @enable_email %>,
-        // SMTP server, username, and password
-        // TODO: what format?
-        smtp: '<%= %>',
-        // Admin email address
-        admincontact: '<%= @admin_contact_address %>',
+        // Log level to use, omits lower log levels
+        // Levels, lowest to highest: silly, debug, verbose, info, warn, error
+        // default = 'info'
+        log_level: '<%= @log_level %>',
+
+        // Protobuf request messages to filter out when using verbose logging
+        // default = ['SENSOREVENT', 'TOUCHEVENT']
+        log_request_filter: [ <% @log_filter.each do |val| %>
+                                  '<%= val %>',
+                              <% end %>
+                            ],
 
         // Openstack cloud connection details
-        openstack: {"authUrl": "<%= @cloud_auth_url %>",
-                    "username": "<%= @cloud_username %>",
-                    "password": "<%= @cloud_password %>",
-                    "tenantId": "<%= @cloud_tenant_id %>",
-                    "tenantName": "<%= @cloud_tenant_name %>" 
-                   },
+        openstack: {
+            "authUrl": "<%= @cloud_auth_url %>",
+            "username": "<%= @cloud_username %>",
+            "password": "<%= @cloud_password %>",
+            "tenantId": "<%= @cloud_tenant_id %>",
+            "tenantName": "<%= @cloud_tenant_name %>" 
+        },
+
+        // VM/Volume defaults
+
+        // goldimage: the image id to use for new VMs
+
+        // vmflavor: the number value (as a string) of the VM flavor. Ex: m1.tiny = '1', m1.small = '2'  See Openstack
+        // for available values for your setup. Or run bin/spm image for a listing
+
+        // goldsnapshotId: the snapshot id to use for new volumes
+
+        // goldsnapshotSize: the integer size in GBs. THIS MUST BE SAME AS THE goldsnapshot SIZE
+
+        // pollintervalforstartup: this is the interval in milliseconds the apis to check for a running VM
+        new_vm_defaults: {
+            goldimage: "<%= @cloud_vm_gold_image_id %>",
+            vmflavor: "<%= @cloud_vm_flavor %>",
+            goldsnapshotId: "<%= @cloud_master_data_volume_id %>",
+            goldsnapshotSize: <%= @cloud_master_data_volume_size %>,
+            pollintervalforstartup: 2000
+        }
+
     },
 
     // WebRTC Video Information sent from Proxy to Client

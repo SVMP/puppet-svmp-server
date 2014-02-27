@@ -52,26 +52,30 @@ class svmp-server(
   $db_name       = 'svmp_server_db',
 
   $log_file      = '/var/log/svmp-server.log',
+  $log_level     = 'info',
+  $log_filter    = [ 'SENSOREVENT', 'TOUCHEVENT' ],
 
   $server_port   = 8002,
   $vm_port       = 8001,
 
-  $use_ssl       = false,
-  $ssl_cert_path = '',
-  $ssl_key_path  = '',
+  $use_ssl         = false,
+  $tls_cert        = '',
+  $tls_private_key = '',
+  $tls_key_pass    = '',
 
   # User authentication options
-  $session_max_length = 21600,
-  $session_token_ttl  = 300,
-  $session_check_interval = 60,
+  $tls_user_auth   = false,
+  $tls_ca_cert     = '',
+
   $use_pam       = false,
   $pam_service   = 'svmp',
 
-  # Web console options
-  $enable_web_console = false,
-  $enable_email  = false,
-  $smtp_server   = '',
-  $admin_contact_address = '',
+  $session_max_length = 21600,
+  $session_token_ttl  = 120,
+  $session_check_interval = 60,
+  
+  $vm_idle_ttl = 3600,
+  $vm_idle_check_interval = 300,
 
   # array of TURN servers to use
   $ice_servers,
@@ -82,6 +86,11 @@ class svmp-server(
   $cloud_password,
   $cloud_tenant_id,
   $cloud_tenant_name,
+
+  $cloud_vm_gold_image_id,
+  $cloud_vm_flavor,
+  $cloud_master_data_volume_id,
+  $cloud_master_data_volume_size,
 
   $manage_repos  = false,
 
