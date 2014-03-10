@@ -169,7 +169,7 @@ class svmp-server(
 
   class { 'nodejs':
     proxy => $npm_proxy,
-  } ->
+  } 
 
   exec { "npm_install_svmp_server":
       command => "npm install",
@@ -177,11 +177,12 @@ class svmp-server(
       cwd => $install_dir,
       environment => "HOME=/opt/svmp-server",
       path => $::path,
-      require => [ Vcsrepo[$install_dir], User[$svmp_user], Package['libpamdev'] ],
+      require => [ Class['nodejs'], Vcsrepo[$install_dir], User[$svmp_user], Package['libpamdev'] ],
   }
 
   package { 'forever':
     provider => 'npm',
+    require  => Class['nodejs'],
   }
 
   file { '/etc/init.d/svmp-server':
