@@ -86,11 +86,15 @@ class svmp-server(
   $cloud_password,
   $cloud_tenant_id,
   $cloud_tenant_name,
+  $cloud_region = 'RegionOne',
 
   $cloud_vm_gold_image_id,
   $cloud_vm_flavor,
   $cloud_master_data_volume_id,
   $cloud_master_data_volume_size,
+
+  $cloud_use_floating_ips = false,
+  $cloud_floating_ip_pool = 'nova',
 
   $manage_repos  = false,
 

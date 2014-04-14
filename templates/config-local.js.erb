@@ -90,29 +90,35 @@ module.exports = {
             "username": "<%= @cloud_username %>",
             "password": "<%= @cloud_password %>",
             "tenantId": "<%= @cloud_tenant_id %>",
-            "tenantName": "<%= @cloud_tenant_name %>" 
+            "tenantName": "<%= @cloud_tenant_name %>",
+            "region": "<%= @cloud_region %>"
         },
 
         // VM/Volume defaults
-
-        // goldimage: the image id to use for new VMs
-
+        // images: a map of device types to their respective image ids on the Openstack server.
         // vmflavor: the number value (as a string) of the VM flavor. Ex: m1.tiny = '1', m1.small = '2'  See Openstack
-        // for available values for your setup. Or run bin/spm image for a listing
-
+        //   for available values for your setup. Or run bin/spm image for a listing. Note: GUID values won't work.
         // goldsnapshotId: the snapshot id to use for new volumes
-
-        // goldsnapshotSize: the integer size in GBs. THIS MUST BE SAME AS THE goldsnapshot SIZE
-
+        // goldsnapshotSize: the integer size in GBs. THIS SHOULD BE SAME AS THE goldsnapshot SIZE
+        // use_floating_ip: if this is enabled, we assign a floating IP address to the VM when we start it. This is
+        //   necessary if the proxy server isn't running within Openstack itself.
+        // floating_ip_pool: if use_floating_ip is enabled, this can be optionally specified to tell Openstack what
+        //   ip pool to use when allocating new addresses
         // pollintervalforstartup: this is the interval in milliseconds the apis to check for a running VM
+
         new_vm_defaults: {
-            goldimage: "<%= @cloud_vm_gold_image_id %>",
+            "images": {
+                // each device type should have its own name and image ID in key/value format, e.g.:
+                // "device_type": "imageID",
+                "default": "<%= @cloud_vm_gold_image_id %>",
+            },
             vmflavor: "<%= @cloud_vm_flavor %>",
             goldsnapshotId: "<%= @cloud_master_data_volume_id %>",
             goldsnapshotSize: <%= @cloud_master_data_volume_size %>,
+            use_floating_ips: <%= @cloud_use_floating_ips %>,
+            floating_ip_pool: "<%= @cloud_floating_ip_pool %>",
             pollintervalforstartup: 2000
         }
-
     },
 
     // WebRTC Video Information sent from Proxy to Client

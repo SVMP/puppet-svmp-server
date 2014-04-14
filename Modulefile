@@ -1,5 +1,5 @@
-name    'svmp-proxy'
-version '1.2.0'
+name    'svmp-server'
+version '1.3.0'
 source 'https://github.com/SVMP/puppet-svmp-server'
 author 'MITRE Corporation'
 license 'Apache License, Version 2.0'
