@@ -1,35 +1,4 @@
-# == Class: svmp_server
-#
-# Installs and configures the gateway server of the Secure Virtual Mobile Platform.
-#
-# === Parameters
-#
-# Document parameters here.
-#
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
-#
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
-#
-# === Examples
-#
-#  class { proxy:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
-#
-# === Authors
-#
-# David Keppler <dkeppler@mitre.org>
+# == Class: svmp::server
 #
 # === Copyright
 #
@@ -45,8 +14,8 @@
 # limitations under the License.
 #
 
-class svmp_server(
-    $server_port   = $::svmp_server::params::port,
+class svmp::server (
+    $server_port   = $::svmp::server::params::port,
 
     # Overseer API server configuration
     $overseer_url,
@@ -61,39 +30,48 @@ class svmp_server(
     $ssl_ca       = undef,
 
     # User authentication options
-    $cert_user_auth       = $::svmp_server::params::cert_user_auth,
-    $behind_reverse_proxy = $::svmp_server::params::behind_reverse_proxy,
+    $cert_user_auth       = $::svmp::server::params::cert_user_auth,
+    $behind_reverse_proxy = $::svmp::server::params::behind_reverse_proxy,
 
-    $log_dir       = $::svmp_server::params::log_dir,
-    $log_file      = $::svmp_server::params::log_file,
-    $log_level     = $::svmp_server::params::log_level,
-    $log_filter    = $::svmp_server::params::log_filter,
+    $log_dir       = $::svmp::server::params::log_dir,
+    $log_file      = $::svmp::server::params::log_file,
+    $log_level     = $::svmp::server::params::log_level,
+    $log_filter    = $::svmp::server::params::log_filter,
 
     # array of TURN server hashes to use
     # must have the url field
     # username and password are optional
-    # example: [ {'url' => 'turn:my.turnserver.com:3478', 'username' => 'bob', 'password' => 's3cr3t' },
-    #            {'url' => 'stun:my.stunserver.com:3478', 'password' => 'asdf1234' },
+    # example: [ { # STUN without credential
+    #              'url' => 'stun:a.public.stunserver.com:3478',
+    #            },
+    #            { # STUN with credential
+    #               'url' => 'stun:my.stunserver.com:3478',
+    #               'password' => 'asdf1234'
+    #            },
+    #            { # TURN
+    #              'url' => 'turn:my.turnserver.com:3478',
+    #              'username' => 'bob', 'password' => 's3cr3t'
+    #            },
     #          ]
     $ice_servers,
 
     $manage_user   = true,
     $manage_group  = true,
-    $user          = $::svmp_server::params::user,
-    $group         = $::svmp_server::params::group,
-    $conf_dir      = $::svmp_server::params::conf_dir,
-    $conf_file     = $::svmp_server::params::conf_file,
-    $conf_template = $::svmp_server::params::conf_template,
-    $service_name  = $::svmp_server::params::service_name,
+    $user          = $::svmp::server::params::user,
+    $group         = $::svmp::server::params::group,
+    $conf_dir      = $::svmp::server::params::conf_dir,
+    $conf_file     = $::svmp::server::params::conf_file,
+    $conf_template = $::svmp::server::params::conf_template,
+    $service_name  = $::svmp::server::params::service_name,
 
-    $version       = $::svmp_server::params::version,
+    $version       = $::svmp::server::params::version,
 
-    $npm_name      = $::svmp_server::params::npm_name,
+    $npm_name      = $::svmp::server::params::npm_name,
 
     $service_enable = true,
     $service_ensure = 'running',
 
-) inherits ::svmp_server::params {
+) {
     validate_bool($enable_ssl)
     validate_bool($service_enable)
 
@@ -105,17 +83,17 @@ class svmp_server(
         # ensure SSL key params aren't empty
     }
 
-    anchor { 'svmp_server::begin': }
-    anchor { 'svmp_server::end': }
+    anchor { 'svmp::server::begin': }
+    anchor { 'svmp::server::end': }
 
-    include svmp_server::install
-    include svmp_server::config
-    include svmp_server::service
+    include svmp::server::install
+    include svmp::server::config
+    include svmp::server::service
 
-    Anchor['svmp_server::begin'] ->
-        Class['svmp_server::install'] ->
-        Class['svmp_server::config'] ->
-        Class['svmp_server::service'] ->
-    Anchor['svmp_server::end']
+    Anchor['svmp::server::begin'] ->
+        Class['svmp::server::install'] ->
+        Class['svmp::server::config'] ->
+        Class['svmp::server::service'] ->
+    Anchor['svmp::server::end']
 
 }
