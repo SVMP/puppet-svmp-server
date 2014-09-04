@@ -1,11 +1,12 @@
-Puppet-svmp-server
+Puppet-svmp
 ===
 
-A puppet module for installing and configuring the [SVMP Server](https://github.com/SVMP/svmp-server).
+A puppet module for installing and configuring the server components of SVMP.
+Includes classes for the [svmp-server](https://github.com/SVMP/svmp-server)
+and [svmp-overseer](https://github.com/SVMP/svmp-overseer).
 
 Assumes nodejs is already installed on the system and does not attempt to
 install it itself.
-
 
 License
 ---
@@ -20,10 +21,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-Contact
----
-
-
-Support
----
