@@ -90,6 +90,8 @@ PATH=$NODE_BIN_DIR:$PATH
 # application process forked by Forever. It will not see any of the other
 # variables defined in this script.
 export NODE_PATH=$NODE_PATH
+export NODE_ENV=production
+export 
 
 start() {
     echo "Starting $NAME"
@@ -168,4 +170,3 @@ case "$1" in
         ;;
 esac
 exit $RETVAL
-

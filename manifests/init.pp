@@ -1,4 +1,4 @@
-# == Class: svmp-server
+# == Class: svmp_server
 #
 # Installs and configures the gateway server of the Secure Virtual Mobile Platform.
 #
@@ -33,7 +33,7 @@
 #
 # === Copyright
 #
-# Copyright (c) 2012-2013, The MITRE Corporation, All Rights Reserved.
+# Copyright (c) 2012-2014, The MITRE Corporation, All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,169 +45,77 @@
 # limitations under the License.
 #
 
-class svmp-server(
-  # Mongodb options
-  $install_db    = true,
-  $db_host       = 'localhost',
-  $db_name       = 'svmp_server_db',
+class svmp_server(
+    $server_port   = $::svmp_server::params::port,
 
-  $log_file      = '/var/log/svmp-server.log',
-  $log_level     = 'info',
-  $log_filter    = [ 'SENSOREVENT', 'TOUCHEVENT' ],
+    # Overseer API server configuration
+    $overseer_url,
+    $overseer_cert,
+    $auth_token,
 
-  $server_port   = 8002,
-  $vm_port       = 8001,
+    # SSL options
+    $enable_ssl   = false,
+    $ssl_cert     = undef,
+    $ssl_key      = undef,
+    $ssl_key_pass = undef,
+    $ssl_ca       = undef,
 
-  $use_ssl         = false,
-  $tls_cert        = '',
-  $tls_private_key = '',
-  $tls_key_pass    = '',
+    # User authentication options
+    $cert_user_auth       = $::svmp_server::params::cert_user_auth,
+    $behind_reverse_proxy = $::svmp_server::params::behind_reverse_proxy,
 
-  # User authentication options
-  $tls_user_auth   = false,
-  $tls_ca_cert     = '',
+    $log_dir       = $::svmp_server::params::log_dir,
+    $log_file      = $::svmp_server::params::log_file,
+    $log_level     = $::svmp_server::params::log_level,
+    $log_filter    = $::svmp_server::params::log_filter,
 
-  $use_pam       = false,
-  $pam_service   = 'svmp',
+    # array of TURN server hashes to use
+    # must have the url field
+    # username and password are optional
+    # example: [ {'url' => 'turn:my.turnserver.com:3478', 'username' => 'bob', 'password' => 's3cr3t' },
+    #            {'url' => 'stun:my.stunserver.com:3478', 'password' => 'asdf1234' },
+    #          ]
+    $ice_servers,
 
-  $session_max_length = 21600,
-  $session_token_ttl  = 120,
-  $session_check_interval = 60,
-  
-  $vm_idle_ttl = 3600,
-  $vm_idle_check_interval = 300,
+    $manage_user   = true,
+    $manage_group  = true,
+    $user          = $::svmp_server::params::user,
+    $group         = $::svmp_server::params::group,
+    $conf_dir      = $::svmp_server::params::conf_dir,
+    $conf_file     = $::svmp_server::params::conf_file,
+    $conf_template = $::svmp_server::params::conf_template,
+    $service_name  = $::svmp_server::params::service_name,
 
-  # array of TURN servers to use
-  $ice_servers,
+    $version       = $::svmp_server::params::version,
 
-  # Openstack options
-  $cloud_auth_url,
-  $cloud_username,
-  $cloud_password,
-  $cloud_tenant_id,
-  $cloud_tenant_name,
-  $cloud_region = 'RegionOne',
+    $npm_name      = $::svmp_server::params::npm_name,
 
-  $cloud_vm_gold_image_id,
-  $cloud_vm_flavor,
-  $cloud_master_data_volume_id,
-  $cloud_master_data_volume_size,
+    $service_enable = true,
+    $service_ensure = 'running',
 
-  $cloud_use_floating_ips = false,
-  $cloud_floating_ip_pool = 'nova',
+) inherits ::svmp_server::params {
+    validate_bool($enable_ssl)
+    validate_bool($service_enable)
 
-  $manage_repos  = false,
+    # Input validation
 
-  # Node.js / NPM options
-  $npm_proxy     = '',
+    # check that the required overseeer options are set
 
-  $svmp_user     = 'svmp',
-  $svmp_group    = 'svmp',
-  $version       = 'svmp-1.2',
-  $install_dir   = '/opt/svmp-server',
-
-  $source_repository = 'https://github.com/SVMP/svmp-server.git',
-) {
-
-  # Package prereqs
-  case $operatingsystem {
-    'RedHat', 'CentOS': {
-      if $manage_repos == true {
-        include epel
-      }
-      $pam_devel_package_name = 'pam-devel'
+    if $enable_ssl {
+        # ensure SSL key params aren't empty
     }
-    
-    'Debian', 'Ubuntu': {
-      $pam_devel_package_name = 'libpam-dev'
-    }
-  }
 
-  package { 'libpamdev':
-    name => $pam_devel_package_name,
-  }
+    anchor { 'svmp_server::begin': }
+    anchor { 'svmp_server::end': }
 
-  package { 'git': }
+    include svmp_server::install
+    include svmp_server::config
+    include svmp_server::service
 
-  # Set up the SVMP group and user
-  group { $svmp_group:
-    ensure => present,
-    system => true,
-  }
-
-  user { $svmp_user:
-    ensure => present,
-    system => true,
-    gid    => $svmp_group,
-    home   => $install_dir,
-    require => Group[$svmp_group],
-  }
-
-  file { $install_dir:
-    ensure => directory,
-    owner  => 'svmp',
-    group  => 'svmp',
-    mode   => '770',
-    require => [ User[$svmp_user], Group[$svmp_group], ],
-  } 
-
-  vcsrepo { $install_dir:
-    ensure   => latest,
-    user     => $svmp_user,
-    provider => git,
-    source   => $source_repository,
-    revision => $version,
-    require  => [ Package['git'], File[$install_dir] ],
-  }
-
-  file { 'config-local.js':
-    name    => "${install_dir}/config/config-local.js",
-    ensure  => file,
-    owner   => $svmp_user,
-    group   => $svmp_group,
-    mode    => '660',
-    content => template('svmp-server/config-local.js.erb'),
-    require => Vcsrepo[$install_dir],
-    notify  => Service['svmp-server'],
-  }
-
-  class { 'nodejs':
-    proxy => $npm_proxy,
-  } 
-
-  exec { "npm_install_svmp_server":
-      command => "npm install",
-      user => $svmp_user,
-      cwd => $install_dir,
-      environment => "HOME=/opt/svmp-server",
-      path => $::path,
-      require => [ Class['nodejs'], Vcsrepo[$install_dir], User[$svmp_user], Package['libpamdev'] ],
-  }
-
-  package { 'forever':
-    provider => 'npm',
-    require  => Class['nodejs'],
-  }
-
-  file { '/etc/init.d/svmp-server':
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '755',
-    content => template('svmp-server/svmp-init.erb'),
-  }
-
-  service { 'svmp-server':
-    enable   => true,
-    ensure   => running,
-    require  => [ File['/etc/init.d/svmp-server'], Package['forever'], ],
-  }
-
-  if $install_db {
-    class { 'mongodb':
-      enable_10gen => true,
-      smallfiles   => true,
-    }
-  }
+    Anchor['svmp_server::begin'] ->
+        Class['svmp_server::install'] ->
+        Class['svmp_server::config'] ->
+        Class['svmp_server::service'] ->
+    Anchor['svmp_server::end']
 
 }

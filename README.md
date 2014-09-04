@@ -1,18 +1,16 @@
 Puppet-svmp-server
 ===
 
-A puppet module for installing and configuring the [SVMP Gateway Server](https://github.com/SVMP/svmp-server).
+A puppet module for installing and configuring the [SVMP Server](https://github.com/SVMP/svmp-server).
 
-To Do
----
+Assumes nodejs is already installed on the system and does not attempt to
+install it itself.
 
-* class documentation
-* fix installing on Ubuntu (works unless you have to use an HTTP proxy, see puppetlabs-nodejs Bug #51)
 
 License
 ---
 
-Copyright (c) 2012-2013, The MITRE Corporation, All Rights Reserved.
+Copyright (c) 2012-2014, The MITRE Corporation, All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
