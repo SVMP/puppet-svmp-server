@@ -1,10 +1,10 @@
-name    'svmp'
+name    'dkeppler-svmp'
 version '2.0.0'
 source 'https://github.com/SVMP/puppet-svmp-server'
 author 'David Keppler'
 license 'Apache License, Version 2.0'
 summary 'Install and configure the SVMP server'
 description 'Install and configure the SVMP server'
-project_page 'https://github.com/SVMP/puppet-svmp'
+project_page 'https://svmp.github.io'
 
 dependency 'puppetlabs/nodejs', '0.6.1'

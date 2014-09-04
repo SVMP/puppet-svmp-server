@@ -63,7 +63,7 @@ auth_token: '<%= @auth_token %>'
 ################################################################################
 
 # Log file path
-log_file: '<%= @log_file %>'
+log_file: '<%= @log_dir %>/<%= @log_file %>'
 
 # Log level to use, omits lower log levels
 # Levels, lowest to highest: silly, debug, verbose, info, warn, error
@@ -73,9 +73,10 @@ log_level: '<%= @log_level %>'
 # Protobuf request messages to filter out when using verbose logging
 # default = ['SENSOREVENT', 'TOUCHEVENT']
 #log_request_filter: ['SENSOREVENT', 'TOUCHEVENT']
-log_request_filter: [ <% @log_filter.each do |val| %>
+log_request_filter: [
+                      <%- @log_filter.each do |val| -%>
                           '<%= val %>',
-                      <% end %>
+                      <%- end -%>
                     ]
 
 
@@ -85,11 +86,16 @@ log_request_filter: [ <% @log_filter.each do |val| %>
 
 webrtc:
     # Enter zero or more servers to use for in ICE negotiation for NAT traversal
-    ice_servers: <% @ice_servers.each do |val| %>
+    ice_servers:
+        <%- @ice_servers.each do |val| -%>
         - url: '<%= val['url'] %>'
-          <% if val['username'] %>username: '<%= val['username'] %>'<% end %>
-          <% if val['password'] %>password: '<%= val['password'] %>'<% end %>
-    <% end %>
+          <%- if val['username'] -%>
+          username: '<%= val['username'] %>'
+          <%- end -%>
+          <%- if val['password'] -%>
+          password: '<%= val['password'] %>'
+          <%- end -%>
+    <%- end -%>
 
     # WebRTC constraints and paramenters that are sent to the peers.
     # Don't change unless you know what you're doing.

@@ -76,7 +76,7 @@
 # Log file path.
 # LOGFILE=/var/log/my-application.log
 #
-NAME="SVMP Server"
+NAME="<% @service_name %>"
 NODE_BIN_DIR=/usr/bin/node
 NODE_PATH=/usr/lib/node_modules
 APPLICATION_DIRECTORY=<%= @install_dir %>
@@ -91,7 +91,7 @@ PATH=$NODE_BIN_DIR:$PATH
 # variables defined in this script.
 export NODE_PATH=$NODE_PATH
 export NODE_ENV=production
-export 
+export
 
 start() {
     echo "Starting $NAME"

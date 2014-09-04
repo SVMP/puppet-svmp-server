@@ -71,7 +71,7 @@ class svmp::server (
     $service_enable = true,
     $service_ensure = 'running',
 
-) {
+) inherits svmp::server::params {
     validate_bool($enable_ssl)
     validate_bool($service_enable)
 

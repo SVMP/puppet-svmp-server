@@ -14,5 +14,24 @@
 # limitations under the License.
 #
 class svmp::overseer::config inherits svmp::overseer {
+    file { 'overseer-config':
+        ensure  => file,
+        path    => "${::svmp::overseer::conf_dir}/${::svmp::overseer::conf_file}",
+        owner   => $::svmp::overseer::user,
+        group   => $::svmp::overseer::group,
+        mode    => '0640',
+        content => template($::svmp::overseer::conf_template),
+        require => File[$::svmp::overseer::conf_dir],
+#        notify  => Service[$::svmp::overseer::service_name],
+    }
+
+    file { "/etc/init.d/${::svmp::overseer::service_name}":
+        ensure  => file,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0750',
+        content => template('svmp/svmp-init.erb'),
+#        notify  => Service[$::svmp::overseer::service_name],
+    }
 
 }
