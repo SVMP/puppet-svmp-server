@@ -21,6 +21,18 @@ class svmp::server::params {
     $conf_template = 'svmp/server/config-local.yaml.erb'
     $service_name  = 'svmp-server'
 
+    case $::osfamily {
+        'Debian': {
+            $init_template = 'svmp/svmp-init-debian.erb'
+        }
+        'RedHat': {
+            $init_template = 'svmp/svmp-init-rh.erb'
+        }
+        default: {
+            fail("The ${module_name} module is not supported on an ${::osfamily} based system.")
+        }
+    }
+
     $port   = 8080
 
     # SSL options

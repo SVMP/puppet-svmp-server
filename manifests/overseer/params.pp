@@ -51,6 +51,18 @@ class svmp::overseer::params {
     $conf_template = 'svmp/overseer/config-local.yaml.erb'
     $service_name  = 'svmp-overseer'
 
+    case $::osfamily {
+        'Debian': {
+            $init_template = 'svmp/svmp-init-debian.erb'
+        }
+        'RedHat': {
+            $init_template = 'svmp/svmp-init-rh.erb'
+        }
+        default: {
+            fail("The ${module_name} module is not supported on an ${::osfamily} based system.")
+        }
+    }
+
     $version       = 'svmp-2.0.0'
     $npm_name      = 'git+https://github.com/SVMP/svmp-overseer'
 }

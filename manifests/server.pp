@@ -63,6 +63,7 @@ class svmp::server (
     $conf_file     = $::svmp::server::params::conf_file,
     $conf_template = $::svmp::server::params::conf_template,
     $service_name  = $::svmp::server::params::service_name,
+    $init_template = $::svmp::server::params::init_template,
 
     $version       = $::svmp::server::params::version,
 

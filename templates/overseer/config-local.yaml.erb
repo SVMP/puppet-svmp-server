@@ -14,7 +14,7 @@ rest_server_url: <%= @server_url %>
 # MongoDB database url
 db:
     production: "mongodb://<%= @db_host %>/<%= @db_name %>"
-#    test: "mongodb://localhost/svmp_overseer_test_db"
+    test: "mongodb://<%= @db_host %>/<%= @db_name %>_test"
 
 ################################################################################
 # SSL/TLS configuration

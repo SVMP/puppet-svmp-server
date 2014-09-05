@@ -14,9 +14,8 @@
 # limitations under the License.
 #
 class svmp::server::config inherits svmp::server {
-    file { 'server-config':
+    file { "${::svmp::server::conf_dir}/${::svmp::server::conf_file}":
         ensure  => file,
-        path    => "${::svmp::server::conf_dir}/${::svmp::server::conf_file}",
         owner   => $::svmp::server::user,
         group   => $::svmp::server::group,
         mode    => '0640',
@@ -25,12 +24,14 @@ class svmp::server::config inherits svmp::server {
 #        notify  => Service[$::svmp::server::service_name],
     }
 
+    $daemon_name = 'svmp-server'
+
     file { "/etc/init.d/${::svmp::server::service_name}":
         ensure  => file,
         owner   => 'root',
         group   => 'root',
         mode    => '0750',
-        content => template('svmp/svmp-init.erb'),
+        content => template($::svmp::server::init_template),
 #        notify  => Service[$::svmp::server::service_name],
     }
 }

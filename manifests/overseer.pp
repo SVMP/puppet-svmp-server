@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 class svmp::overseer (
-    $server_port = $::svmp::overseer::params::port,
+    $server_port = $::svmp::overseer::params::server_port,
     $server_url  = $::svmp::overseer::params::server_url,
 
     # Logging
@@ -97,6 +97,7 @@ class svmp::overseer (
     $conf_file     = $::svmp::overseer::params::conf_file,
     $conf_template = $::svmp::overseer::params::conf_template,
     $service_name  = $::svmp::overseer::params::service_name,
+    $init_template = $::svmp::overseer::params::init_template,
 
     $version       = $::svmp::overseer::params::version,
 

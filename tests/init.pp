@@ -31,7 +31,7 @@ class { 'svmp::server':
 }
 
 class { 'svmp::overseer':
-  proxy_host => '127.0.0.1',
+  proxy_host => $::fqdn,
   cloud_platform => 'openstack',
   ice_servers => $ice_servers,
   cloud_vm_images => { 'phone' => 'asdf-zxcv-qwer', 'tablet' => '1234-5678-90' },
