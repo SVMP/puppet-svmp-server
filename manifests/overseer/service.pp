@@ -14,16 +14,11 @@
 # limitations under the License.
 #
 class svmp::overseer::service inherits svmp::overseer {
-#    package { 'forever':
-#        provider => 'npm',
-#    }
-
-#    service { $::svmp::overseer::service_name:
-#        ensure  => $::svmp::overseer::service_ensure,
-#        enable  => $::svmp::overseer::service_enable,
-#        require => [
-#            File["/etc/init.d/${::svmp::overseer::service_name}"],
-#            Package['forever'],
-#        ],
-#    }
+    service { $::svmp::overseer::service_name:
+        ensure  => $::svmp::overseer::service_ensure,
+        enable  => $::svmp::overseer::service_enable,
+        require => [
+            File["/etc/init.d/${::svmp::overseer::service_name}"],
+        ],
+    }
 }
