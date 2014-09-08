@@ -1,0 +1,70 @@
+#!/bin/bash
+#
+# <%= @service_name %>      Postfix Mail Transfer Agent
+#
+# chkconfig: 2345 80 30
+# description: Startup script for the Secure Virtual Mobile Platform \
+#              component <%= @daemon_name %>
+# processname: <%= @daemon_name %>
+# pidfile: /var/run/<%= @service_name %>.pid
+# config: <%= @conf_dir %>/<%= @conf_file %>
+
+### BEGIN INIT INFO
+# Provides: <%= @service_name %>
+# Required-Start: $local_fs $network $syslog
+# Required-Stop: $local_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: <%= @service_name %>
+# Description:       Startup script for the Secure Virtual Mobile Platform
+#                    component <%= @daemon_name %>
+### END INIT INFO
+
+# Author: David Keppler <dkeppler@mitre.org>
+
+. /etc/rc.d/init.d/functions
+
+RETVAL=0
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC="<%= @service_name %>"
+NAME=<%= @service_name %>
+USER=<%= @user %>
+DAEMON=/usr/bin/<%= @daemon_name %>
+DAEMON_ARGS="--config <%= @conf_dir %>/<%= @conf_file %>"
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+do_start() {
+	echo -n "Starting $NAME services: "
+	export NODE_ENV=production
+	daemon --user $USER --pidfile $PIDFILE \
+		$DAEMON $DAEMON_ARGS
+	touch /var/lock/subsys/<%= @service_name %>
+}
+
+do_stop() {
+	echo -n "Shutting down $NAME services: "
+	killproc -p $PIDFILE <%= @daemon_name %>
+	rm -f /var/lock/subsys/<%= @service_name %>
+}
+
+case "$1" in
+	start)
+		do_start
+	;;
+	stop)
+		do_stop
+	;;
+	status)
+	;;
+	reload|restart)
+		do_stop
+		do_start
+	;;
+	*)
+		echo "Usage: <servicename> {start|stop|status|reload|restart}"
+		exit 1
+	;;
+esac
+exit $RETVAL
