@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# <%= @service_name %>      Postfix Mail Transfer Agent
+# <%= @service_name %>      Secure Virtual Mobile Platform
 #
 # chkconfig: 2345 80 30
 # description: Startup script for the Secure Virtual Mobile Platform \
@@ -31,21 +31,21 @@ DESC="<%= @service_name %>"
 NAME=<%= @service_name %>
 USER=<%= @user %>
 DAEMON=/usr/bin/<%= @daemon_name %>
-DAEMON_ARGS="--config <%= @conf_dir %>/<%= @conf_file %>"
+DAEMON_ENV="NODE_ENV=production config=<%= @conf_dir %>/<%= @conf_file %>"
+FOREVER_OPTS="-a -o <%= @log_dir %>/<%= @service_name %>.out -e <%= @log_dir %>/<%= @service_name %>.err -l <%= @log_dir %>/forever.log"
+DAEMON_ARGS=""
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
 do_start() {
 	echo -n "Starting $NAME services: "
-	export NODE_ENV=production
-	daemon --user $USER --pidfile $PIDFILE \
-		$DAEMON $DAEMON_ARGS
+	su -c "$DAEMON_ENV forever start $FOREVER_OPTS $DAEMON" $USER
 	touch /var/lock/subsys/<%= @service_name %>
 }
 
 do_stop() {
 	echo -n "Shutting down $NAME services: "
-	killproc -p $PIDFILE <%= @daemon_name %>
+	su -c "forever stop $DAEMON" $USER
 	rm -f /var/lock/subsys/<%= @service_name %>
 }
 

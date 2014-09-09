@@ -14,10 +14,15 @@
 # limitations under the License.
 #
 class svmp::server::service inherits svmp::server {
+    package { 'forever':
+        provider => 'npm',
+    }
+
     service { $::svmp::server::service_name:
         ensure  => $::svmp::server::service_ensure,
         enable  => $::svmp::server::service_enable,
         require => [
+            Package['npm'],
             File["/etc/init.d/${::svmp::server::service_name}"],
         ],
     }
