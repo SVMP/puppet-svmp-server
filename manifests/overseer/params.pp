@@ -46,6 +46,7 @@ class svmp::overseer::params {
 
     $user          = 'svmp_overseer'
     $group         = 'svmp_overseer'
+    $home_dir      = '/var/lib/svmp_overseer'
     $conf_dir      = '/etc/svmp-overseer'
     $conf_file     = 'config-local.yaml'
     $conf_template = 'svmp/overseer/config-local.yaml.erb'

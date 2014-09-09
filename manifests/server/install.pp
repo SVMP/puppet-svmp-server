@@ -26,9 +26,20 @@ class svmp::server::install inherits svmp::server {
     validate_bool($::svmp::server::manage_user)
     if $::svmp::server::manage_user {
         user { $::svmp::server::user:
-            ensure => present,
-            gid    => $::svmp::server::group,
-            system => true,
+            ensure      => present,
+            gid         => $::svmp::server::group,
+            home        => $::svmp::server::home_dir,
+            system      => true,
+        }
+        file { $::svmp::server::home_dir:
+            ensure  => directory,
+            owner   => $::svmp::server::user,
+            group   => $::svmp::server::group,
+            mode    => '0750',
+            require => [
+                User[$::svmp::server::user],
+                Group[$::svmp::server::group],
+            ],
         }
     }
 

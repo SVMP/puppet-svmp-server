@@ -16,6 +16,7 @@
 class svmp::server::params {
     $user          = 'svmp_server'
     $group         = 'svmp_server'
+    $home_dir      = '/var/lib/svmp_server'
     $conf_dir      = '/etc/svmp-server'
     $conf_file     = 'config-local.yaml'
     $conf_template = 'svmp/server/config-local.yaml.erb'

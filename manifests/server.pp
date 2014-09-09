@@ -59,6 +59,7 @@ class svmp::server (
     $manage_group  = true,
     $user          = $::svmp::server::params::user,
     $group         = $::svmp::server::params::group,
+    $home_dir      = $::svmp::server::params::home_dir,
     $conf_dir      = $::svmp::server::params::conf_dir,
     $conf_file     = $::svmp::server::params::conf_file,
     $conf_template = $::svmp::server::params::conf_template,

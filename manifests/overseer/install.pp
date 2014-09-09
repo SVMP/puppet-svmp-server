@@ -26,9 +26,20 @@ class svmp::overseer::install inherits svmp::overseer {
     validate_bool($::svmp::overseer::manage_user)
     if $::svmp::overseer::manage_user {
         user { $::svmp::overseer::user:
-            ensure => present,
-            gid    => $::svmp::overseer::group,
-            system => true,
+            ensure      => present,
+            gid         => $::svmp::overseer::group,
+            home        => $::svmp::overseer::home_dir,
+            system      => true,
+        }
+        file { $::svmp::overseer::home_dir:
+            ensure  => directory,
+            owner   => $::svmp::overseer::user,
+            group   => $::svmp::overseer::group,
+            mode    => '0750',
+            require => [
+                User[$::svmp::overseer::user],
+                Group[$::svmp::overseer::group],
+            ],
         }
     }
 
@@ -36,6 +47,17 @@ class svmp::overseer::install inherits svmp::overseer {
     #      ensure   => $version,
       ensure   => present,
       provider => 'npm',
+    }
+
+    file { $::svmp::overseer::home_dir:
+        ensure  => directory,
+        owner   => $::svmp::overseer::user,
+        group   => $::svmp::overseer::group,
+        mode    => '0750',
+        require => [
+            User[$::svmp::overseer::user],
+            Group[$::svmp::overseer::group],
+        ],
     }
 
     file { $::svmp::overseer::conf_dir:

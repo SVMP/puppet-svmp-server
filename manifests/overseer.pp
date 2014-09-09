@@ -93,6 +93,7 @@ class svmp::overseer (
     $manage_group  = true,
     $user          = $::svmp::overseer::params::user,
     $group         = $::svmp::overseer::params::group,
+    $home_dir      = $::svmp::overseer::params::home,
     $conf_dir      = $::svmp::overseer::params::conf_dir,
     $conf_file     = $::svmp::overseer::params::conf_file,
     $conf_template = $::svmp::overseer::params::conf_template,
