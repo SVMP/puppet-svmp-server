@@ -8,3 +8,4 @@ description 'Install and configure the SVMP server'
 project_page 'https://svmp.github.io'
 
 dependency 'puppetlabs/nodejs', '0.6.1'
+dependency 'ajcrowe/supervisord', '0.4.2'

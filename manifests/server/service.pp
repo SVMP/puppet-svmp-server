@@ -14,16 +14,36 @@
 # limitations under the License.
 #
 class svmp::server::service inherits svmp::server {
-    package { 'forever':
-        provider => 'npm',
+    package { 'python-setuptools': } ->
+    package { 'python-pip': } ->
+
+    class { 'supervisord':
+        #install_pip => true,
     }
 
-    service { $::svmp::server::service_name:
-        ensure  => $::svmp::server::service_ensure,
-        enable  => $::svmp::server::service_enable,
-        require => [
-            Package['npm'],
-            File["/etc/init.d/${::svmp::server::service_name}"],
-        ],
+    case $::osfamily {
+        'Debian': {
+            $install_path = '/usr/local/bin'
+        }
+        'RedHat': {
+            $install_path = '/usr/bin'
+        }
+        default: {
+            $install_path = '/usr/local/bin'
+        }
+    }
+
+    supervisord::program { $::svmp::server::service_name:
+        command         => "${install_path}/svmp-server",
+        user            => $::svmp::server::user,
+        priority        => '100',
+        environment     => {
+            'HOME'     => $::svmp::server::home_dir,
+            'PATH'     => '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin',
+            'NODE_ENV' => 'production',
+            'config'   => "${::svmp::server::conf_dir}/${::svmp::server::conf_file}"
+        },
+        redirect_stderr => true,
+        stdout_logfile  => 'svmp-server.out'
     }
 }

@@ -24,15 +24,4 @@ class svmp::overseer::config inherits svmp::overseer {
 #        notify  => Service[$::svmp::overseer::service_name],
     }
 
-    $daemon_name = 'svmp-overseer'
-
-    file { "/etc/init.d/${::svmp::overseer::service_name}":
-        ensure  => file,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0750',
-        content => template($::svmp::overseer::init_template),
-#        notify  => Service[$::svmp::overseer::service_name],
-    }
-
 }

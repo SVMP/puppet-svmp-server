@@ -70,13 +70,7 @@ class svmp::server (
 
     $npm_name      = $::svmp::server::params::npm_name,
 
-    $service_enable = true,
-    $service_ensure = 'running',
-
 ) inherits svmp::server::params {
-    validate_bool($enable_ssl)
-    validate_bool($service_enable)
-
     # Input validation
 
     # check that the required overseeer options are set

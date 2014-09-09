@@ -49,17 +49,6 @@ class svmp::overseer::install inherits svmp::overseer {
       provider => 'npm',
     }
 
-    file { $::svmp::overseer::home_dir:
-        ensure  => directory,
-        owner   => $::svmp::overseer::user,
-        group   => $::svmp::overseer::group,
-        mode    => '0750',
-        require => [
-            User[$::svmp::overseer::user],
-            Group[$::svmp::overseer::group],
-        ],
-    }
-
     file { $::svmp::overseer::conf_dir:
         ensure  => directory,
         owner   => $::svmp::overseer::user,

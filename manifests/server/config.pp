@@ -23,15 +23,4 @@ class svmp::server::config inherits svmp::server {
         require => File[$::svmp::server::conf_dir],
 #        notify  => Service[$::svmp::server::service_name],
     }
-
-    $daemon_name = 'svmp-server'
-
-    file { "/etc/init.d/${::svmp::server::service_name}":
-        ensure  => file,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0750',
-        content => template($::svmp::server::init_template),
-#        notify  => Service[$::svmp::server::service_name],
-    }
 }

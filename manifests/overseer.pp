@@ -93,7 +93,7 @@ class svmp::overseer (
     $manage_group  = true,
     $user          = $::svmp::overseer::params::user,
     $group         = $::svmp::overseer::params::group,
-    $home_dir      = $::svmp::overseer::params::home,
+    $home_dir      = $::svmp::overseer::params::home_dir,
     $conf_dir      = $::svmp::overseer::params::conf_dir,
     $conf_file     = $::svmp::overseer::params::conf_file,
     $conf_template = $::svmp::overseer::params::conf_template,
@@ -103,9 +103,6 @@ class svmp::overseer (
     $version       = $::svmp::overseer::params::version,
 
     $npm_name      = $::svmp::overseer::params::npm_name,
-
-    $service_enable = true,
-    $service_ensure = 'running',
 
 ) inherits svmp::overseer::params {
 

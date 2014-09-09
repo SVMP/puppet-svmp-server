@@ -14,16 +14,36 @@
 # limitations under the License.
 #
 class svmp::overseer::service inherits svmp::overseer {
-    package { 'forever':
-        provider => 'npm',
+    package { 'python-setuptools': } ->
+    package { 'python-pip': } ->
+
+    class { 'supervisord':
+        #install_pip => true,
     }
 
-    service { $::svmp::overseer::service_name:
-        ensure  => $::svmp::overseer::service_ensure,
-        enable  => $::svmp::overseer::service_enable,
-        require => [
-            Package['npm'],
-            File["/etc/init.d/${::svmp::overseer::service_name}"],
-        ],
+    case $::osfamily {
+        'Debian': {
+            $install_path = '/usr/local/bin'
+        }
+        'RedHat': {
+            $install_path = '/usr/bin'
+        }
+        default: {
+            $install_path = '/usr/local/bin'
+        }
+    }
+
+    supervisord::program { $::svmp::overseer::service_name:
+        command         => "${install_path}/svmp-overseer",
+        user            => $::svmp::overseer::user,
+        priority        => '100',
+        environment     => {
+            'HOME'     => $::svmp::overseer::home_dir,
+            'PATH'     => '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin',
+            'NODE_ENV' => 'production',
+            'config'   => "${::svmp::overseer::conf_dir}/${::svmp::overseer::conf_file}"
+        },
+        redirect_stderr => true,
+        stdout_logfile  => 'svmp-overseer.out'
     }
 }
