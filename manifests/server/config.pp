@@ -21,6 +21,5 @@ class svmp::server::config inherits svmp::server {
         mode    => '0640',
         content => template($::svmp::server::conf_template),
         require => File[$::svmp::server::conf_dir],
-#        notify  => Service[$::svmp::server::service_name],
     }
 }

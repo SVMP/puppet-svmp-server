@@ -31,6 +31,7 @@ class { 'svmp::server':
 }
 
 class { 'svmp::overseer':
+  console_session_secret => 'wqeroiuyafglkjadoiauylaskjdhasdf',
   proxy_host => $::fqdn,
   cloud_platform => 'openstack',
   ice_servers => $ice_servers,

@@ -46,4 +46,11 @@ class svmp::server::service inherits svmp::server {
         redirect_stderr => true,
         stdout_logfile  => 'svmp-server.out'
     }
+
+    supervisord::supervisorctl { $::svmp::server::service_name:
+        command => 'restart',
+        process => $::svmp::server::service_name,
+        refreshonly => true,
+        subscribe   => File["${::svmp::server::conf_dir}/${::svmp::server::conf_file}"],
+    }
 }

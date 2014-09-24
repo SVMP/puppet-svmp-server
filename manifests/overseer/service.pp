@@ -46,4 +46,12 @@ class svmp::overseer::service inherits svmp::overseer {
         redirect_stderr => true,
         stdout_logfile  => 'svmp-overseer.out'
     }
+
+    supervisord::supervisorctl { $::svmp::overseer::service_name:
+        command     => 'restart',
+        process     => $::svmp::overseer::service_name,
+        refreshonly => true,
+        subscribe   => File["${::svmp::overseer::conf_dir}/${::svmp::overseer::conf_file}"],
+    }
+
 }

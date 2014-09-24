@@ -21,7 +21,6 @@ class svmp::overseer::config inherits svmp::overseer {
         mode    => '0640',
         content => template($::svmp::overseer::conf_template),
         require => File[$::svmp::overseer::conf_dir],
-#        notify  => Service[$::svmp::overseer::service_name],
     }
 
 }
