@@ -25,7 +25,7 @@ class { 'svmp::server':
   overseer_cert => '/path/to/overseer-cert.pem',
   auth_token    => 'asdfasdfasdfasdfa.zxcvzxcvzvzxcvzxcv.qwerqwerqwerqwerqwer',
 
-  version  => 'websocket-wip', # the svmp-2.0.0 tag doesn't exist yet
+  version  => 'master', # the svmp-2.0.0 tag doesn't exist yet
 
   ice_servers   => $ice_servers,
 }

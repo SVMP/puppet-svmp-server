@@ -89,6 +89,17 @@ class svmp::overseer (
     #          ]
     $ice_servers,
 
+    # Web Console settings
+    $console_session_secret,
+
+    # Mail settings when allowing user self-registration
+    $smtp_host = '',
+    $smtp_port = '',
+    $smtp_secure_connection = false,
+    $smtp_username = '',
+    $smtp_password = '',
+    $admin_mail_from_address = "${user}@${::fqdn}",
+
     $manage_user   = true,
     $manage_group  = true,
     $user          = $::svmp::overseer::params::user,

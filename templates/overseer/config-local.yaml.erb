@@ -17,6 +17,23 @@ db:
     test: "mongodb://<%= @db_host %>/<%= @db_name %>_test"
 
 ################################################################################
+# WebConsole settings
+################################################################################
+
+# Web session secret
+session_secret: '<%= @console_session_secret %>'
+
+# Email settings used to notify admin and users on account creation
+# IF the host field is left empty, email funcitonality will be ignored
+smtp:
+    host: '<%= @smtp_host %>'
+    port: <%= @smtp_port %>
+    secure_connection: <%= @smtp_secure_connection %>
+    username: '<%= @smtp_username %>'
+    password: '<%= @smtp_password %>'
+    admin_email: '<%= @admin_mail_from_address %>'
+
+################################################################################
 # SSL/TLS configuration
 ################################################################################
 
