@@ -43,6 +43,11 @@ class svmp::overseer::install inherits svmp::overseer {
         }
     }
 
+    package { 'bower':
+        ensure   => present,
+        provider => 'npm',
+    } ->
+
     package { "${::svmp::overseer::npm_name}#${::svmp::overseer::version}":
     #      ensure   => $version,
       ensure   => present,
