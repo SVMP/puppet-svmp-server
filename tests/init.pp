@@ -25,7 +25,7 @@ class { 'svmp::server':
   overseer_cert => '/path/to/overseer-cert.pem',
   auth_token    => 'asdfasdfasdfasdfa.zxcvzxcvzvzxcvzxcv.qwerqwerqwerqwerqwer',
 
-  version  => 'master', # the svmp-2.0.0 tag doesn't exist yet
+  #version  => 'master',
 
   ice_servers   => $ice_servers,
 }
@@ -36,5 +36,6 @@ class { 'svmp::overseer':
   cloud_platform => 'openstack',
   ice_servers => $ice_servers,
   cloud_vm_images => { 'phone' => 'asdf-zxcv-qwer', 'tablet' => '1234-5678-90' },
-  version => 'master', # the svmp-2.0.0 tag doesn't exist yet
+
+  #version => 'master',
 }

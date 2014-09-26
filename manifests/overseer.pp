@@ -94,7 +94,7 @@ class svmp::overseer (
 
     # Mail settings when allowing user self-registration
     $smtp_host = '',
-    $smtp_port = '',
+    $smtp_port = 465,
     $smtp_secure_connection = false,
     $smtp_username = '',
     $smtp_password = '',
